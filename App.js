@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, TextInput, TouchableOpacity, View, ScrollView, Text, FlatList } from 'react-native';
 import { db } from './config/firebase';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 export default function App() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [users, setUsers] = useState({})
 
   async function handleAddUser (){
 
@@ -17,6 +18,13 @@ export default function App() {
           Email: email,
         });
         console.log("Document written with ID: ", docRef.id);
+        
+        const querySnapshot = await getDocs(collection(db, "Users"));
+        querySnapshot.forEach((doc) => {
+          console.log(`${doc.id} => ${doc.data().Name}`);
+          console.log(`${doc.id} => ${doc.data().Email}`);
+        });
+
       } catch (e) {
         console.error("Error adding document: ", e);
       }
@@ -36,8 +44,8 @@ export default function App() {
         </View>
         <TouchableOpacity onPress={ () => {handleAddUser()}}>
           <Text style={styles.button}>Save</Text>
-        </TouchableOpacity>
-      </ScrollView>
+        </TouchableOpacity> 
+      </ScrollView>   
   );
 }
 
@@ -65,6 +73,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     padding: 2,
     borderRadius: 4,
-    fontSize: 20
+    fontSize: 20,
+    marginBottom: '5%'
   }
 });
