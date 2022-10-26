@@ -30,7 +30,7 @@ export default function App() {
       }
     }
     else{
-      alert('Complete all fields!');
+      alert('Complete all fields please!');
     }
   }
 
